@@ -11,7 +11,6 @@ module.exports = {
         Competition.aggregate([
             {
                 $match: {},
-
             },
             {
                 $lookup: { from: 'user', localField: 'author', foreignField: '_id', as: 'author' },
@@ -32,22 +31,42 @@ module.exports = {
         ])
             .exec((err, results) => {
                 if (err) {
-                    return reject(err);
+                    res.status(404);
                 }
                 res.status(200).json(results);
             }
             )
-        // .then((response) => {
-        //     for (let i = 0; i < array.length; i++) {
-        //         response[i] = { response };
-        //     }
-        //     res.status(200).json(response);
-        // })
-        // .catch((err) => {
-        //     res.status(404);
-        // })
     },
     getSubmissionByCompetitionId: async (req, res, next) => {
+        const id = req.params.id || 0
+        Submission.aggregate([
+            {
+                $match: { competition: mongoose.Types.ObjectId(`${id}`) },
+            },
+            {
+                $lookup: { from: 'user', localField: 'author', foreignField: '_id', as: 'author' },
+            },
+            {
+                $lookup: { from: 'submissionlike', localField: '_id', foreignField: 'submission', as: 'likes' }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    image: 1,
+                    author: { $arrayElemAt: ["$author", 0] },
+                    competition: 1,
+                    likes: { $size: "$likes" },
+
+                }
+            }
+        ])
+            .exec((err, results) => {
+                if (err) {
+                    res.status(404);
+                }
+                res.status(200).json(results);
+            }
+            )
 
     },
     postcompetitions: (req, res, next) => {
@@ -94,6 +113,50 @@ module.exports = {
                 "author": mongoose.Types.ObjectId(`5e4dcfbed99d2c2c4cc0efb${index % 5}`),
             })
             submission.save()
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+    },
+    postSubmissionLike: (req, res, next) => {
+        for (let index = 0; index < 10; index++) {
+            const submissionlike = new Submissionlike({
+                "_id": mongoose.Types.ObjectId(`5e4dcfadad9d2c2a2adadbd${index}`),
+                "submission": mongoose.Types.ObjectId(`551137c2f9e1fac808a5f57${index%5}`),
+                "author": mongoose.Types.ObjectId(`5e4dcfbed99d2c2c4cc0efb${index % 5}`),
+            })
+            submissionlike.save()
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+        for (let index = 0; index < 10; index++) {
+            const submissionlike = new Submissionlike({
+                "_id": mongoose.Types.ObjectId(`5e4dcfadad9d2c2a2adad1d${index}`),
+                "submission": mongoose.Types.ObjectId(`551137c2f9e1fac808a5f57${index%5}`),
+                "author": mongoose.Types.ObjectId(`5e4dcfbed99d2c2c4cc0efb${index % 5}`),
+            })
+            submissionlike.save()
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+        for (let index = 0; index < 10; index++) {
+            const submissionlike = new Submissionlike({
+                "_id": mongoose.Types.ObjectId(`5e4dcfadad9d232a2adadbd${index}`),
+                "submission": mongoose.Types.ObjectId(`551137c2f9e1fac808a5f57${index%5}`),
+                "author": mongoose.Types.ObjectId(`5e4dcfbed99d2c2c4cc0efb${index % 5}`),
+            })
+            submissionlike.save()
                 .then((response) => {
                     console.log(response)
                 })
