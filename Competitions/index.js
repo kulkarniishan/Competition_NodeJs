@@ -10,7 +10,7 @@ require('./configs/mongodb.config')
 
 
 //Server configurations
-const port = process.env.PORT || 8081
+const port = process.env.PORT || 8080
 const app = express()
 const server = http.createServer(app)
 const version = '1.0.0'
