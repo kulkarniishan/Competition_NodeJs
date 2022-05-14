@@ -5,6 +5,10 @@ const swaggerUI = require('swagger-ui-express')
 const swaggerJsDoc = require('swagger-jsdoc')
 const httpError = require('http-errors');
 
+// configurations
+require('./configs/mongodb.config')
+
+
 //Server configurations
 const port = process.env.PORT || 8080
 const app = express()
@@ -24,12 +28,12 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/profile/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 //middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use('/', (req, res) => {
+app.use('/test', (req, res) => {
     res.send("testing the api")
 })
 app.use('/competition', competitionRoute)
