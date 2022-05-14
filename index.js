@@ -1,6 +1,9 @@
 const express = require('express')
 const competitionRoute = require('./routes/competition.route')
 const http = require('http')
+const swaggerUI = require('swagger-ui-express')
+const swaggerJsDoc = require('swagger-jsdoc')
+const httpError = require('http-errors');
 
 //Server configurations
 const port = process.env.PORT || 8080
@@ -26,6 +29,9 @@ app.use('/profile/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 //middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use('/', (req, res) => {
+    res.send("testing the api")
+})
 app.use('/competition', competitionRoute)
 
 //Invalid route
@@ -42,4 +48,9 @@ app.use((err, req, res, next) => {
             message: err.message,
         },
     })
+})
+
+
+server.listen(port, () => {
+    console.log(`Server listening on port ${port}!`)
 })

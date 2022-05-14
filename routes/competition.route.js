@@ -1,6 +1,8 @@
+const { getCompetitions } = require("../controllers/competition.controller");
 const router = require("express").Router();
 
-router.get('/', );
+router.get('/', getCompetitions);
+router.get('/:id/submissions', getCompetitions);
 
 
-module.exports = Router
+module.exports = router
