@@ -2,7 +2,7 @@ version: '3'
 
 services:
   competitions:
-    build: ./competitions
+    build: ./competition
     depends_on:
       - mongodb
     links: [ 'mongodb' ]
