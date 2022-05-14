@@ -9,11 +9,11 @@ var submissionSchema = new Schema({
     },
     author: {
         type: Schema.Types.ObjectId,
-        ref:"user"
+        ref: "user"
     },
     competition: {
-        type: String,
-        default: ""
+        type: Schema.Types.ObjectId,
+        ref: "competition"
     },
 });
 // Compile model from schema
