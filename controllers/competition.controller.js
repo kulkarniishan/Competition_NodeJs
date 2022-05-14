@@ -8,13 +8,44 @@ const { default: mongoose } = require('mongoose')
 
 module.exports = {
     getCompetitions: async (req, res, next) => {
-        Competition.find().populate('author').exec()
-            .then((response) => {
-                res.status(200).json(response);
-            })
-            .catch((err) => {
-                res.status(404);
-            })
+        Competition.aggregate([
+            {
+                $match: {},
+
+            },
+            {
+                $lookup: { from: 'user', localField: 'author', foreignField: '_id', as: 'author' },
+            },
+            {
+                $lookup: { from: 'submission', localField: '_id', foreignField: 'competition', as: 'submissions' }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    description: 1,
+                    author: { $arrayElemAt: ["$author", 0] },
+                    submission: { $size: "$submissions" },
+
+                }
+            }
+        ])
+            .exec((err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                res.status(200).json(results);
+            }
+            )
+        // .then((response) => {
+        //     for (let i = 0; i < array.length; i++) {
+        //         response[i] = { response };
+        //     }
+        //     res.status(200).json(response);
+        // })
+        // .catch((err) => {
+        //     res.status(404);
+        // })
     },
     getSubmissionByCompetitionId: async (req, res, next) => {
 
