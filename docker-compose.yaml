@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  competitions:
+    build: ./competitions
+    depends_on:
+      - mongodb
+    links: [ 'mongodb' ]
+    restart: always
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+    ports:
+      - "8080:8080"
+    networks:
+      - web
+
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -13,6 +26,7 @@ services:
       - web
 volumes:
   mongodb_data_container:
+
 
 networks:
   web:
